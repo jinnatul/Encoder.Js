@@ -1,6 +1,8 @@
 import { Layout } from "antd";
 import React from "react";
 import moment from 'moment';
+import { ToastContainer } from 'react-toastify';
+
 import AppRoutes from "../routes/AppRoutes";
 
 const { Header, Content, Footer } = Layout;
@@ -25,6 +27,7 @@ const Layouts = () => {
       <Footer style={{ textAlign: "center" }}>
         Minify ©{moment().format('YYYY')} Created by Morol
       </Footer>
+      <ToastContainer />
     </Layout>
   );
 };

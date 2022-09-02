@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Col, Row, Menu, Button } from "antd";
 import CodeEditor from "@uiw/react-textarea-code-editor";
-import "./Home.css";
+import { minify } from "terser";
+import Notification from "../../utils/Notification";
+import "./MinifyJs.css";
 import {
   FolderAddOutlined,
   VerticalAlignBottomOutlined,
@@ -15,10 +17,26 @@ import {
 
 const { Item } = Menu;
 
-const Home = () => {
+const MinifyJs = () => {
   const [code, setCode] = useState(``);
+  const [minifyCode, setMinifyCode] = useState(``);
 
-  console.log(code);
+  const minifyCodeHandler = async () => {
+    try {
+      if (!code.length) {
+        return Notification("Please write code or paste code!", "info");
+      }
+      const result = await minify(code, {
+        compress: true,
+      });
+      if (result.code) {
+        setMinifyCode(result.code);
+      }
+      Notification("Minify successfully", "success");
+    } catch (error) {
+      Notification("Provide valid javascript code!", "error");
+    }
+  };
 
   return (
     <div>
@@ -66,6 +84,7 @@ const Home = () => {
                 icon={<FullscreenExitOutlined />}
                 size={"large"}
                 style={{ background: "#001529", borderColor: "green" }}
+                onClick={minifyCodeHandler}
               >
                 Minify
               </Button>
@@ -103,11 +122,11 @@ const Home = () => {
           </Menu>
           <div className="App-editor">
             <CodeEditor
-              value={code}
+              value={minifyCode}
               language="js"
               placeholder="Output code here"
               minHeight={500}
-              onChange={(evn) => setCode(evn.target.value)}
+              onChange={(evn) => setMinifyCode(evn.target.value)}
               style={{
                 fontSize: 14,
                 backgroundColor: "#f5f5f5",
@@ -122,4 +141,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default MinifyJs;
