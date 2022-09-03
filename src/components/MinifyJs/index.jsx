@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Col, Row, Menu, Button } from "antd";
+import { Col, Row, Menu, Button, Modal } from "antd";
 import CodeEditor from "@uiw/react-textarea-code-editor";
 import { minify } from "terser";
 import Notification from "../../utils/Notification";
@@ -13,13 +13,13 @@ import {
   LinkOutlined,
   FullscreenExitOutlined,
   FormatPainterOutlined,
+  ExclamationCircleOutlined,
 } from "@ant-design/icons";
 
 const MinifyJs = ({ type }) => {
   const [code, setCode] = useState(``);
   const [minifyCode, setMinifyCode] = useState(``);
 
-  console.log(type);
   const minifyCodeHandler = async () => {
     try {
       if (!code.length) {
@@ -34,6 +34,36 @@ const MinifyJs = ({ type }) => {
       Notification("Minify successfully", "success");
     } catch (error) {
       Notification("Provide valid javascript code!", "error");
+    }
+  };
+
+  const clearInput = () => {
+    if (code.length) {
+      Modal.confirm({
+        icon: <ExclamationCircleOutlined />,
+        content: "Do you want to clear your editor?",
+        okText: "Yes",
+        cancelText: "No",
+        onOk: () => {
+          setCode(``);
+          Notification("Editor cleaned", "success");
+        },
+      });
+    }
+  };
+
+  const clearOutput = () => {
+    if (minifyCode.length) {
+      Modal.confirm({
+        icon: <ExclamationCircleOutlined />,
+        content: "Do you want to clear your editor?",
+        okText: "Yes",
+        cancelText: "No",
+        onOk: () => {
+          setMinifyCode(``);
+          Notification("Editor cleaned", "success");
+        },
+      });
     }
   };
 
@@ -62,6 +92,7 @@ const MinifyJs = ({ type }) => {
       label: "Clear",
       icon: <DeleteOutlined />,
       key: "clear",
+      onClick: clearInput,
     },
   ];
 
@@ -85,6 +116,7 @@ const MinifyJs = ({ type }) => {
       label: "Clear",
       icon: <DeleteOutlined />,
       key: "clear",
+      onClick: clearOutput,
     },
   ];
 
