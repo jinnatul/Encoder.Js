@@ -12,56 +12,67 @@ import {
 import AppRoutes from "../routes/AppRoutes";
 
 const { Header, Content, Footer } = Layout;
-const { Item, SubMenu } = Menu;
 
 const Layouts = () => {
+  const Items = [
+    {
+      label: <Link to={"/"}>Home</Link>,
+      icon: <HomeOutlined />,
+      key: "home",
+    },
+    {
+      label: "Minify",
+      icon: <FullscreenExitOutlined />,
+      key: "minify",
+      children: [
+        {
+          label: <Link to={"/minify-js"}>Javascript</Link>,
+          key: "m_javascript",
+        },
+        {
+          label: <Link to={"/minify-css"}>CSS</Link>,
+          key: "m_css",
+        },
+        {
+          label: <Link to={"/minify-html"}>HTML</Link>,
+          key: "m_html",
+        },
+      ],
+    },
+    {
+      label: "Beautify",
+      icon: <FormatPainterOutlined />,
+      key: "beautify",
+      children: [
+        {
+          label: <Link to={"/beautify-js"}>Javascript</Link>,
+          key: "b_javascript",
+        },
+        {
+          label: <Link to={"/beautify-css"}>CSS</Link>,
+          key: "b_css",
+        },
+        {
+          label: <Link to={"/beautify-html"}>HTML</Link>,
+          key: "b_html",
+        },
+        {
+          label: <Link to={"/beautify-json"}>JSON</Link>,
+          key: "b_json",
+        },
+      ],
+    },
+  ];
+
   return (
-    <Layout>
+    <Layout style={{ minHeight: "100vh" }}>
       <Header style={{ position: "fixed", zIndex: 1, width: "100%" }}>
         <Menu
           style={{ justifyContent: "center" }}
           mode="horizontal"
           theme="dark"
-        >
-          <Link to={"/"}>
-            <Item key="home" icon={<HomeOutlined />} t>
-              Home
-            </Item>
-          </Link>
-          <SubMenu
-            key="minify"
-            title="Minify"
-            icon={<FullscreenExitOutlined />}
-          >
-            <Item key="m_javascript">
-              <Link to={"/minify-js"}>Javascript</Link>
-            </Item>
-            <Item key="m_css">
-              <Link to={"/minify-css"}>CSS</Link>
-            </Item>
-            <Item key="m_html">
-              <Link to={"/minify-html"}>HTML</Link>
-            </Item>
-          </SubMenu>
-          <SubMenu
-            key="beautify"
-            title="Beautify"
-            icon={<FormatPainterOutlined />}
-          >
-            <Item key="b_javascript">
-              <Link to={"/beautify-js"}>Javascript</Link>
-            </Item>
-            <Item key="b_css">
-              <Link to={"/beautify-css"}>CSS</Link>
-            </Item>
-            <Item key="b_html">
-              <Link to={"/beautify-html"}>HTML</Link>
-            </Item>
-            <Item key="b_json">
-              <Link to={"/beautify-json"}>JSON</Link>
-            </Item>
-          </SubMenu>
-        </Menu>
+          items={Items}
+        />
       </Header>
       <Content
         className="site-layout"

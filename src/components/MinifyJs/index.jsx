@@ -15,12 +15,11 @@ import {
   FormatPainterOutlined,
 } from "@ant-design/icons";
 
-const { Item } = Menu;
-
-const MinifyJs = () => {
+const MinifyJs = ({ type }) => {
   const [code, setCode] = useState(``);
   const [minifyCode, setMinifyCode] = useState(``);
 
+  console.log(type);
   const minifyCodeHandler = async () => {
     try {
       if (!code.length) {
@@ -38,33 +37,68 @@ const MinifyJs = () => {
     }
   };
 
+  const InputItems = [
+    {
+      label: "Open File",
+      icon: <FolderAddOutlined />,
+      key: "openfile",
+    },
+    {
+      label: "Enter Url",
+      icon: <LinkOutlined />,
+      key: "enterurl",
+    },
+    {
+      label: "Copy",
+      icon: <CopyOutlined />,
+      key: "copy",
+    },
+    {
+      label: "Full Screen",
+      icon: <FullscreenOutlined />,
+      key: "fullscreen",
+    },
+    {
+      label: "Clear",
+      icon: <DeleteOutlined />,
+      key: "clear",
+    },
+  ];
+
+  const OutputItems = [
+    {
+      label: "Save",
+      icon: <VerticalAlignBottomOutlined />,
+      key: "save",
+    },
+    {
+      label: "Copy",
+      icon: <CopyOutlined />,
+      key: "copy",
+    },
+    {
+      label: "Full Screen",
+      icon: <FullscreenOutlined />,
+      key: "fullscreen",
+    },
+    {
+      label: "Clear",
+      icon: <DeleteOutlined />,
+      key: "clear",
+    },
+  ];
+
   return (
     <div>
       <Row>
         <Col xs={{ span: 6, offset: 2 }} lg={{ span: 9, offset: 1 }}>
-          <Menu mode="horizontal" theme="dark">
-            <Item key="file" icon={<FolderAddOutlined />}>
-              Open File
-            </Item>
-            <Item key="url" icon={<LinkOutlined />}>
-              Enter Url
-            </Item>
-            <Item key="Copy" icon={<CopyOutlined />}>
-              Copy
-            </Item>
-            <Item key="fullscreen" icon={<FullscreenOutlined />}>
-              Full Screen
-            </Item>
-            <Item key="clear" icon={<DeleteOutlined />}>
-              Clear
-            </Item>
-          </Menu>
+          <Menu mode="horizontal" theme="dark" items={InputItems} />
           <div className="App-editor">
             <CodeEditor
               value={code}
               language="js"
               placeholder="Write code here or paste code here"
-              minHeight={500}
+              minHeight={550}
               onChange={(evn) => setCode(evn.target.value)}
               style={{
                 fontSize: 14,
@@ -76,56 +110,45 @@ const MinifyJs = () => {
           </div>
         </Col>
         <Col xs={{ span: 2, offset: 1 }} lg={{ span: 2, offset: 1 }}>
-          <Row justify="center">
-            <Col>
-              <Button
-                type="primary"
-                shape="round"
-                icon={<FullscreenExitOutlined />}
-                size={"large"}
-                style={{ background: "#001529", borderColor: "green" }}
-                onClick={minifyCodeHandler}
-              >
-                Minify
-              </Button>
-            </Col>
-          </Row>
-          <br></br>
-          <Row justify="center">
-            <Col>
-              <Button
-                type="primary"
-                shape="round"
-                icon={<FormatPainterOutlined />}
-                size={"large"}
-                style={{ background: "#001529", borderColor: "green" }}
-              >
-                Beautify
-              </Button>
-            </Col>
-          </Row>
+          {type === "minify" ? (
+            <Row justify="center">
+              <Col>
+                <Button
+                  type="primary"
+                  shape="round"
+                  icon={<FullscreenExitOutlined />}
+                  size={"large"}
+                  style={{ background: "#001529", borderColor: "green" }}
+                  onClick={minifyCodeHandler}
+                >
+                  Minify JS
+                </Button>
+              </Col>
+            </Row>
+          ) : (
+            <Row justify="center">
+              <Col>
+                <Button
+                  type="primary"
+                  shape="round"
+                  icon={<FormatPainterOutlined />}
+                  size={"large"}
+                  style={{ background: "#001529", borderColor: "green" }}
+                >
+                  Beautify JS
+                </Button>
+              </Col>
+            </Row>
+          )}
         </Col>
         <Col xs={{ span: 5, offset: 2 }} lg={{ span: 9, offset: 1 }}>
-          <Menu mode="horizontal" theme="dark">
-            <Item key="save" icon={<VerticalAlignBottomOutlined />}>
-              Save
-            </Item>
-            <Item key="Copy" icon={<CopyOutlined />}>
-              Copy
-            </Item>
-            <Item key="fullscreen" icon={<FullscreenOutlined />}>
-              Full Screen
-            </Item>
-            <Item key="clear" icon={<DeleteOutlined />}>
-              Clear
-            </Item>
-          </Menu>
+          <Menu mode="horizontal" theme="dark" items={OutputItems} />
           <div className="App-editor">
             <CodeEditor
               value={minifyCode}
               language="js"
               placeholder="Output code here"
-              minHeight={500}
+              minHeight={550}
               onChange={(evn) => setMinifyCode(evn.target.value)}
               style={{
                 fontSize: 14,
