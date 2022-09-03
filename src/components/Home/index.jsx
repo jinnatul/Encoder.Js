@@ -18,14 +18,18 @@ const Home = () => {
           </Link>
         </Col>
         <Col span={4} offset={1}>
-          <Card className="card">
-            <p>CSS</p>
-          </Card>
+          <Link to={"/minify-css"}>
+            <Card className="card">
+              <p>CSS</p>
+            </Card>
+          </Link>
         </Col>
         <Col span={4} offset={1}>
-          <Card className="card">
-            <p>HTML</p>
-          </Card>
+          <Link to={"/minify-html"}>
+            <Card className="card">
+              <p>HTML</p>
+            </Card>
+          </Link>
         </Col>
       </Row>
       <br></br>
@@ -42,20 +46,24 @@ const Home = () => {
           </Link>
         </Col>
         <Col span={4} offset={1}>
-          <Card className="card">
-            <p>CSS</p>
-          </Card>
+          <Link to={"/beautify-css"}>
+            <Card className="card">
+              <p>CSS</p>
+            </Card>
+          </Link>
         </Col>
         <Col span={4} offset={1}>
-          <Card className="card">
-            <p>HTML</p>
-          </Card>
+          <Link to={"/beautify-html"}>
+            <Card className="card">
+              <p>HTML</p>
+            </Card>
+          </Link>
         </Col>
       </Row>
       <br></br>
       <Row gutter={16}>
         <Col span={4} offset={5}>
-          <Link to={"/"}>
+          <Link to={"/beautify-json"}>
             <Card className="card">
               <p>JSON</p>
             </Card>
