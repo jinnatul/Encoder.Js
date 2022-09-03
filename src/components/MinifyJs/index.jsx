@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Col, Row, Menu, Button, Modal } from "antd";
+import { Col, Row, Menu, Button, Modal, Drawer } from "antd";
 import CodeEditor from "@uiw/react-textarea-code-editor";
 import { minify } from "terser";
 import Notification from "../../utils/Notification";
@@ -14,9 +14,12 @@ import {
   FullscreenExitOutlined,
   FormatPainterOutlined,
   ExclamationCircleOutlined,
+  CloseCircleOutlined,
 } from "@ant-design/icons";
 
 const MinifyJs = ({ type }) => {
+  const [visible, setVisible] = useState(false);
+  const [fullScreenType, setFullScreenType] = useState(true);
   const [code, setCode] = useState(``);
   const [minifyCode, setMinifyCode] = useState(``);
 
@@ -35,6 +38,18 @@ const MinifyJs = ({ type }) => {
     } catch (error) {
       Notification("Provide valid javascript code!", "error");
     }
+  };
+
+  const clipBoard = (type) => {
+    navigator.clipboard.writeText(type ? code : minifyCode);
+    if (code.length || minifyCode.length) {
+      Notification("Code copy successfully", "success");
+    }
+  };
+
+  const openFullScreen = (type) => {
+    setFullScreenType(type);
+    setVisible(true);
   };
 
   const clearInput = () => {
@@ -82,11 +97,13 @@ const MinifyJs = ({ type }) => {
       label: "Copy",
       icon: <CopyOutlined />,
       key: "copy",
+      onClick: () => clipBoard(true),
     },
     {
       label: "Full Screen",
       icon: <FullscreenOutlined />,
       key: "fullscreen",
+      onClick: () => openFullScreen(true),
     },
     {
       label: "Clear",
@@ -106,11 +123,13 @@ const MinifyJs = ({ type }) => {
       label: "Copy",
       icon: <CopyOutlined />,
       key: "copy",
+      onClick: () => clipBoard(false),
     },
     {
       label: "Full Screen",
       icon: <FullscreenOutlined />,
       key: "fullscreen",
+      onClick: () => openFullScreen(false),
     },
     {
       label: "Clear",
@@ -192,6 +211,51 @@ const MinifyJs = ({ type }) => {
           </div>
         </Col>
       </Row>
+      <Drawer
+        placement={"left"}
+        visible={visible}
+        closable={false}
+        width="100VW"
+      >
+        <Row justify="end">
+          <Col>
+            <Button
+              className="closeBtn"
+              shape="round"
+              icon={<CloseCircleOutlined />}
+              size={"large"}
+              onClick={() => setVisible(false)}
+            >
+              Close
+            </Button>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={24}>
+            <CodeEditor
+              value={fullScreenType ? code : minifyCode}
+              language="js"
+              placeholder={
+                fullScreenType
+                  ? "Write code here or paste code here"
+                  : "Output code here"
+              }
+              minHeight={900}
+              onChange={(evn) =>
+                fullScreenType
+                  ? setCode(evn.target.value)
+                  : setMinifyCode(evn.target.value)
+              }
+              style={{
+                fontSize: 14,
+                backgroundColor: "#f5f5f5",
+                fontFamily:
+                  "ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace",
+              }}
+            />
+          </Col>
+        </Row>
+      </Drawer>
     </div>
   );
 };
