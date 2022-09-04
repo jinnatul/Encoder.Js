@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, createRef } from "react";
 import { Col, Row, Menu, Button, Modal, Drawer } from "antd";
 import CodeEditor from "@uiw/react-textarea-code-editor";
 import { minify } from "terser";
@@ -23,6 +23,8 @@ const MinifyJs = ({ type }) => {
   const [code, setCode] = useState(``);
   const [minifyCode, setMinifyCode] = useState(``);
 
+  const fileUpload = createRef();
+
   const minifyCodeHandler = async () => {
     try {
       if (!code.length) {
@@ -38,6 +40,33 @@ const MinifyJs = ({ type }) => {
     } catch (error) {
       Notification("Provide valid javascript code!", "error");
     }
+  };
+
+  const changeHandler = (event) => {
+    const reader = new FileReader();
+    reader.addEventListener("load", (e) => {
+      setCode(e.target.result);
+    });
+    reader.readAsText(event.target.files[0]);
+  };
+
+  const clickFileInput = () => {
+    fileUpload.current.click();
+  };
+
+  const downloadFile = () => {
+    const element = document.createElement("a");
+    element.setAttribute(
+      "href",
+      "data:text/plain;charset=utf-8," + encodeURIComponent(minifyCode)
+    );
+    element.setAttribute("download", "Minify.js");
+
+    element.style.display = "none";
+    document.body.appendChild(element);
+
+    element.click();
+    document.body.removeChild(element);
   };
 
   const clipBoard = (type) => {
@@ -84,9 +113,22 @@ const MinifyJs = ({ type }) => {
 
   const InputItems = [
     {
-      label: "Open File",
+      label: (
+        <input
+          id="inputFile"
+          type="file"
+          name="file"
+          accept=".js"
+          onChange={changeHandler}
+          onClick={(event) => {
+            event.target.value = null;
+          }}
+          ref={fileUpload}
+        />
+      ),
       icon: <FolderAddOutlined />,
       key: "openfile",
+      onClick: clickFileInput,
     },
     {
       label: "Enter Url",
@@ -118,6 +160,7 @@ const MinifyJs = ({ type }) => {
       label: "Save",
       icon: <VerticalAlignBottomOutlined />,
       key: "save",
+      onClick: downloadFile,
     },
     {
       label: "Copy",

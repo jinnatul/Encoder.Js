@@ -11,5 +11,9 @@
   border: 1px solid greenyellow;
   color: #fff;
   background: #001529;
-  margin:0.51rem;
+  margin: 0.51rem;
+}
+
+#inputFile {
+  display: none;
 }
