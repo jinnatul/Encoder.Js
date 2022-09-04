@@ -1,7 +1,18 @@
 import React, { useState, createRef } from "react";
-import { Col, Row, Menu, Button, Modal, Drawer } from "antd";
+import {
+  Col,
+  Row,
+  Menu,
+  Button,
+  Modal,
+  Drawer,
+  Input,
+  Form,
+  Tooltip,
+} from "antd";
 import CodeEditor from "@uiw/react-textarea-code-editor";
 import { minify } from "terser";
+import axios from "axios";
 import Notification from "../../utils/Notification";
 import "./MinifyJs.css";
 import {
@@ -19,11 +30,13 @@ import {
 
 const MinifyJs = ({ type }) => {
   const [visible, setVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [fullScreenType, setFullScreenType] = useState(true);
   const [code, setCode] = useState(``);
   const [minifyCode, setMinifyCode] = useState(``);
 
   const fileUpload = createRef();
+  const [form] = Form.useForm();
 
   const minifyCodeHandler = async () => {
     try {
@@ -42,7 +55,7 @@ const MinifyJs = ({ type }) => {
     }
   };
 
-  const changeHandler = (event) => {
+  const fileRead = (event) => {
     const reader = new FileReader();
     reader.addEventListener("load", (e) => {
       setCode(e.target.result);
@@ -52,6 +65,20 @@ const MinifyJs = ({ type }) => {
 
   const clickFileInput = () => {
     fileUpload.current.click();
+  };
+
+  const enterUrl = async ({ url }) => {
+    try {
+      if (url.slice(-3) !== ".js") {
+        return Notification("Provide valid url!", "error");
+      }
+      const { data } = await axios.get(url);
+      setCode(data);
+      setIsModalVisible(false);
+      form.resetFields();
+    } catch (error) {
+      Notification("Provide valid url!", "error");
+    }
   };
 
   const downloadFile = () => {
@@ -67,6 +94,8 @@ const MinifyJs = ({ type }) => {
 
     element.click();
     document.body.removeChild(element);
+
+    Notification("File download successfully", "success");
   };
 
   const clipBoard = (type) => {
@@ -119,14 +148,20 @@ const MinifyJs = ({ type }) => {
           type="file"
           name="file"
           accept=".js"
-          onChange={changeHandler}
+          onChange={fileRead}
           onClick={(event) => {
             event.target.value = null;
           }}
           ref={fileUpload}
         />
       ),
-      icon: <FolderAddOutlined />,
+      icon: (
+        <Tooltip placement="leftTop" title="Click to Upload">
+          <div className="my-icon-wrapper test">
+            <FolderAddOutlined />
+          </div>
+        </Tooltip>
+      ),
       key: "openfile",
       onClick: clickFileInput,
     },
@@ -134,6 +169,10 @@ const MinifyJs = ({ type }) => {
       label: "Enter Url",
       icon: <LinkOutlined />,
       key: "enterurl",
+      onClick: () => {
+        form.resetFields();
+        setIsModalVisible(true);
+      },
     },
     {
       label: "Copy",
@@ -299,6 +338,48 @@ const MinifyJs = ({ type }) => {
           </Col>
         </Row>
       </Drawer>
+      <Modal
+        visible={isModalVisible}
+        footer={false}
+        onCancel={() => setIsModalVisible(false)}
+      >
+        <br></br>
+        <br></br>
+        <Form
+          name="basic"
+          initialValues={{
+            remember: true,
+          }}
+          form={form}
+          onFinish={enterUrl}
+          autoComplete="off"
+        >
+          <Form.Item
+            label="URL"
+            name="url"
+            rules={[
+              {
+                required: true,
+                message: "Please input your url!",
+              },
+              { min: 3, message: "Please input valid url!" },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            wrapperCol={{
+              offset: 10,
+              span: 16,
+            }}
+          >
+            <Button type="primary" htmlType="submit">
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 };

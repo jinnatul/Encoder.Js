@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@uiw/react-textarea-code-editor": "^2.0.3",
     "antd": "^4.22.8",
+    "axios": "^0.27.2",
     "html-minifier-terser": "^7.0.0",
     "moment": "^2.29.4",
     "prismjs": "^1.29.0",
