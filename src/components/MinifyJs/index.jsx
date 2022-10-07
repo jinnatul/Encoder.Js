@@ -12,6 +12,7 @@ import {
 } from "antd";
 import CodeEditor from "@uiw/react-textarea-code-editor";
 import { minify } from "terser";
+import { js } from "js-beautify";
 import axios from "axios";
 import Notification from "../../utils/Notification";
 import "./MinifyJs.css";
@@ -50,6 +51,21 @@ const MinifyJs = ({ type }) => {
         setMinifyCode(result.code);
       }
       Notification("Minify successfully", "success");
+    } catch (error) {
+      Notification("Provide valid javascript code!", "error");
+    }
+  };
+
+  const beautifyCodeHandler = async () => {
+    try {
+      if (!code.length) {
+        return Notification("Please write code or paste code!", "info");
+      }
+      const result = js(code, { indent_size: 2, space_in_empty_paren: true });
+      if (result) {
+        setMinifyCode(result);
+      }
+      Notification("Beautify successfully", "success");
     } catch (error) {
       Notification("Provide valid javascript code!", "error");
     }
@@ -267,6 +283,7 @@ const MinifyJs = ({ type }) => {
                   icon={<FormatPainterOutlined />}
                   size={"large"}
                   style={{ background: "#001529", borderColor: "green" }}
+                  onClick={beautifyCodeHandler}
                 >
                   Beautify JS
                 </Button>
