@@ -48,7 +48,7 @@ const MinifyCss = ({ type }) => {
       }
       Notification("Minify successfully", "success");
     } catch (error) {
-      Notification("Provide valid javascript code!", "error");
+      Notification("Provide valid css/scss code!", "error");
     }
   };
 
